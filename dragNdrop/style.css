@@ -1,0 +1,13 @@
+.spacer {
+  height: 2px;
+  background-color: blue;
+  width: 60px;
+  margin: 3px 0;
+}
+
+[draggable='true'] {
+  border: 1px solid black;
+  width: 60px;
+  height: 20px;
+  background-color: white;
+}
