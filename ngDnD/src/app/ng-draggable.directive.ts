@@ -4,6 +4,8 @@ import {
   ElementRef,
   OnInit,
   Renderer2,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 
 @Directive({
@@ -20,11 +22,13 @@ export class NgDraggableDirective {
     this.spacer.classList.add('spacer');
   }
 
+  @Output() public move = new EventEmitter();
   @HostListener('dragstart', ['$event'])
   onDragStart(dragEvent) {
     console.log('dragStart');
     this.dndEl = dragEvent.target;
   }
+
   @HostListener('dragover', ['$event'])
   onDragOver(dragEvent) {
     this.target = dragEvent.target;
@@ -32,11 +36,18 @@ export class NgDraggableDirective {
       this.el.insertBefore(this.spacer, this.target || this.target.nextSibling);
     }
   }
+
   @HostListener('dragend', ['$event'])
   onDragEnd(dragEvent) {
     this.el.removeChild(this.spacer);
     if (this.target) {
       this.el.insertBefore(this.dndEl, this.target);
+      this.move.emit(
+        JSON.stringify({
+          el: this.dndEl.getAttribute('data-key'),
+          before: this.target.getAttribute('data-key'),
+        }),
+      );
     }
   }
 }

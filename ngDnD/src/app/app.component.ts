@@ -7,10 +7,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   items = [
-    { title: 'item 1' },
-    { title: 'item 2' },
-    { title: 'item 3' },
-    { title: 'item 4' },
-    { title: 'item 5' },
+    { id: 1, title: 'item 1' },
+    { id: 2, title: 'item 2' },
+    { id: 3, title: 'item 3' },
+    { id: 4, title: 'item 4' },
+    { id: 5, title: 'item 5' },
   ];
+
+  public handleMove(event) {
+    console.log(event);
+  }
 }
