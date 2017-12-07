@@ -15,6 +15,12 @@ export class AppComponent {
   ];
 
   public handleMove(event) {
-    console.log(event);
+    const jsonEvent = JSON.parse(event);
+    const el = this.items.splice(
+      this.items.findIndex(item => item.id === parseInt(jsonEvent.el, 10)),
+      1,
+    );
+    const index = this.items.findIndex(item => item.id === jsonEvent.before);
+    this.items.splice(index, 0, el.pop());
   }
 }
