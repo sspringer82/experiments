@@ -37,7 +37,6 @@ class Dot {
   }
 
   render() {
-    this.ctx.clearRect(this.x - 9, this.y - 9, 2 * 9, 2 * 9);
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, true);
     this.ctx.fill();
@@ -47,7 +46,17 @@ class Dot {
     return Math.sqrt((x - this.x) ** 2 + (y - this.y) ** 2) < this.size;
   }
 
+  clear() {
+    this.ctx.clearRect(
+      this.x - this.size - 1,
+      this.y - this.size - 1,
+      2 * this.size + 2,
+      2 * this.size + 2,
+    );
+  }
+
   toggle() {
+    this.clear();
     if (this.active) {
       this.size = 4;
       this.ctx.fillStyle = 'black';
@@ -59,3 +68,7 @@ class Dot {
     this.render();
   }
 }
+
+// wave
+// color wave
+// connect
