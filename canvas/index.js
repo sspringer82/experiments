@@ -6,16 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
   ctx.translate(0.5, 0.5);
   ctx.strokeStyle = 'black';
   ctx.fillStyle = 'black';
-  matrix.forEach((x, row) => {
-    x.forEach((y, col) => {
-      const dot = new Dot(ctx, col + 1, row + 1);
-      dot.render();
-      matrix[row][col] = dot;
-    });
+  matrixWalker(matrix, (x, y, cell) => {
+    matrix[x][y] = new Dot(ctx, x + 1, y + 1);
   });
+  matrixWalker(matrix, (x, y, dot) => dot.render());
 });
 
-function drawDot(ctx, x, y, size) {}
+function matrixWalker(matrix, cb) {
+  matrix.forEach((x, rowIndex) =>
+    x.forEach((item, colIndex) => cb(rowIndex, colIndex, item)),
+  );
+}
 
 class Dot {
   constructor(ctx, x, y) {
