@@ -12,11 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
   matrixWalker(matrix, (x, y, dot) => dot.render());
 
   canvas.addEventListener('click', e => {
-    matrixWalker(matrix, (x, y, dot) => {
-      if (dot.isClicked(e.offsetX, e.offsetY)) {
-        dot.toggle();
-      }
-    });
+    matrixWalker(
+      matrix,
+      (x, y, dot) => dot.isClicked(e.offsetX, e.offsetY) && dot.toggle(),
+    );
   });
 });
 
