@@ -1,31 +1,52 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
+  const matrix = new Matrix(ctx, 3, 3);
   ctx.translate(0.5, 0.5);
   ctx.strokeStyle = 'black';
   ctx.fillStyle = 'black';
-  matrixWalker(matrix, (x, y, cell) => {
-    matrix[x][y] = new Dot(ctx, x + 1, y + 1);
-  });
-  matrixWalker(matrix, (x, y, dot) => dot.render());
 
-  canvas.addEventListener('click', e => {
-    matrixWalker(
-      matrix,
-      (x, y, dot) => dot.isClicked(e.offsetX, e.offsetY) && dot.toggle(),
-    );
-  });
+  matrix.fill(Dot.getInstance);
+
+  matrix.matrixWalker((x, y, dot) => dot.render());
+  canvas.addEventListener('click', matrix.createClickHandler(matrix));
 });
 
-function matrixWalker(matrix, cb) {
-  matrix.forEach((x, rowIndex) =>
-    x.forEach((item, colIndex) => cb(rowIndex, colIndex, item)),
-  );
+class Matrix {
+  constructor(ctx, cols, rows) {
+    this.ctx = ctx;
+    this.cols = cols;
+    this.rows = rows;
+    this.matrix = new Array(rows)
+      .fill(0, 0, rows)
+      .map(row => new Array(cols).fill(0, 0, cols));
+  }
+
+  fill(creator) {
+    this.matrixWalker(
+      (x, y, cell) => (this.matrix[x][y] = creator(this.ctx, x + 1, y + 1)),
+    );
+  }
+
+  matrixWalker(cb) {
+    this.matrix.forEach((x, rowIndex) =>
+      x.forEach((item, colIndex) => cb(rowIndex, colIndex, item)),
+    );
+  }
+
+  createClickHandler() {
+    return e =>
+      this.matrixWalker(
+        (x, y, dot) => dot.isClicked(e.offsetX, e.offsetY) && dot.toggle(),
+      );
+  }
 }
 
 class Dot {
+  static getInstance(ctx, x, y) {
+    return new Dot(ctx, x, y);
+  }
+
   constructor(ctx, x, y) {
     this.ctx = ctx;
     this.spaceHorizontal = 30;
