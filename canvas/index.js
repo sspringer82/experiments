@@ -37,6 +37,7 @@ class Dot {
   }
 
   render() {
+    this.ctx.clearRect(this.x - 9, this.y - 9, 2 * 9, 2 * 9);
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, true);
     this.ctx.fill();
