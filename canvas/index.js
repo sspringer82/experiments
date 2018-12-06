@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
-  const matrix = new Matrix(ctx, 6, 3);
+  const matrix = new Matrix(ctx, 12, 12);
   ctx.translate(0.5, 0.5);
   ctx.strokeStyle = 'black';
   ctx.fillStyle = 'black';
@@ -13,6 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
   canvas.addEventListener('click', matrix.createClickHandler(matrix));
 
   document.getElementById('wave').addEventListener('click', doTheWave);
+  document.getElementById('reset').addEventListener('click', () => {
+    if (interval !== null) {
+      clearInterval(interval);
+      interval = null;
+    }
+    matrix.reset();
+  });
   function doTheWave() {
     if (interval === null) {
       let current = 0;
