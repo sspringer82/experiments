@@ -1,25 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
-  const matrix = new Matrix(ctx, 3, 3);
+  const matrix = new Matrix(ctx, 6, 3);
   ctx.translate(0.5, 0.5);
   ctx.strokeStyle = 'black';
   ctx.fillStyle = 'black';
+  let interval = null;
 
   matrix.fill(Dot.getInstance);
 
   matrix.matrixWalker((x, y, dot) => dot.render());
   canvas.addEventListener('click', matrix.createClickHandler(matrix));
+
+  document.getElementById('wave').addEventListener('click', doTheWave);
+  function doTheWave() {
+    if (interval === null) {
+      let current = 0;
+      interval = setInterval(() => {
+        matrix.reset();
+        for (let i = 0; i < matrix.rows; i++) {
+          matrix.getItem(current, i).toggle();
+        }
+        current = current < matrix.cols - 1 ? current + 1 : 0;
+      }, 1000);
+    } else {
+      clearInterval(interval);
+      interval = null;
+    }
+  }
 });
 
 class Matrix {
   constructor(ctx, cols, rows) {
     this.ctx = ctx;
-    this.cols = cols;
     this.rows = rows;
-    this.matrix = new Array(rows)
-      .fill(0, 0, rows)
-      .map(row => new Array(cols).fill(0, 0, cols));
+    this.cols = cols;
+    this.matrix = new Array(cols)
+      .fill(0, 0, cols)
+      .map(row => new Array(rows).fill(0, 0, rows));
   }
 
   fill(creator) {
@@ -39,6 +57,14 @@ class Matrix {
       this.matrixWalker(
         (x, y, dot) => dot.isClicked(e.offsetX, e.offsetY) && dot.toggle(),
       );
+  }
+
+  getItem(x, y) {
+    return this.matrix[x][y];
+  }
+
+  reset() {
+    this.matrixWalker((x, y, cell) => cell.reset());
   }
 }
 
@@ -86,6 +112,14 @@ class Dot {
       this.ctx.fillStyle = 'red';
     }
     this.active = !this.active;
+    this.render();
+  }
+
+  reset() {
+    this.clear();
+    this.size = 4;
+    this.active = false;
+    this.ctx.fillStyle = 'black';
     this.render();
   }
 }
